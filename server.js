@@ -5,6 +5,8 @@ const app = express();
 
 // Connect to DB
 connectDB();
+// INIT Middleware
+app.use(express.json({extended: false}));
 
 app.get('/', (req, res) =>res.send('API is Running'));
 
