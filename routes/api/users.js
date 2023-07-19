@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const { check, validationResult } = require("express-validator");
 
 const User = require("../../models/User");
@@ -57,6 +59,19 @@ router.post(
             await user.save();
 
             // Return jsonwebtoken or other response if needed
+
+            const payload = {
+                user: {
+                    id: user.id
+                }
+            }
+            jwt.sign(payload, config.get('jwtSecret'),
+                // Optional but for Secure you need to input the expiration
+                { expiresIn: 360000 },
+                (err, token) => {
+                    if (err) throw err;
+                    res.json({ token });
+                });
             res.send("User registered successfully");
         } catch (err) {
             console.log(err.message);
