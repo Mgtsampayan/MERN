@@ -65,6 +65,7 @@ router.post(
                     id: user.id
                 }
             }
+
             jwt.sign(payload, config.get('jwtSecret'),
                 // Optional but for Secure you need to input the expiration
                 { expiresIn: 360000 },
@@ -72,7 +73,6 @@ router.post(
                     if (err) throw err;
                     res.json({ token });
                 });
-            res.send("User registered successfully");
         } catch (err) {
             console.log(err.message);
             res.status(500).send("Server error");
