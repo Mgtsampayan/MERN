@@ -46,7 +46,7 @@ router.post(
                 d: "mm",
             });
 
-            user = new User({
+            user = new Users({
                 name,
                 email,
                 avatar,
