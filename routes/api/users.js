@@ -8,20 +8,13 @@ const { check, validationResult } = require("express-validator");
 
 const User = require("../../models/User");
 
-// routes GET api/users
-// desc   Test route
-// access Public
-
+// Register a new user
 router.post(
     "/",
     [
         check("name", "Name is required").not().isEmpty(),
-
-        check(
-            "password",
-            "Please Enter a Password with 6 or more characters"
-        ).isLength({ min: 6 }),
-        check("email", "Email is Required").isEmail(),
+        check("password", "Password must be at least 6 characters long").isLength({ min: 6 }),
+        check("email", "Please provide a valid email").isEmail(),
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -34,9 +27,7 @@ router.post(
             let user = await User.findOne({ email });
 
             if (user) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: "User already exists" }] });
+                return res.status(400).json({ errors: [{ msg: "User already exists" }] });
             }
 
             // Use Gravatar
@@ -46,7 +37,7 @@ router.post(
                 d: "mm",
             });
 
-            user = new Users({
+            user = new User({
                 name,
                 email,
                 avatar,
@@ -58,8 +49,7 @@ router.post(
 
             await user.save();
 
-            // Return jsonwebtoken or other response if needed
-
+            // Return jsonwebtoken and success message
             const payload = {
                 user: {
                     id: user.id,
@@ -69,16 +59,16 @@ router.post(
             jwt.sign(
                 payload,
                 config.get("jwtSecret"),
-                // Optional but for Secure you need to input the expiration
+                // Optional but for security, you can set the expiration
                 { expiresIn: 360000 },
                 (err, token) => {
                     if (err) throw err;
-                    res.json({ token });
+                    res.json({ token, msg: "User registered successfully" });
                 }
             );
         } catch (err) {
-            console.log(err.message);
-            res.status(500).send("Server error");
+            console.error(err.message);
+            res.status(500).json({ errors: [{ msg: "Server error" }] });
         }
     }
 );
