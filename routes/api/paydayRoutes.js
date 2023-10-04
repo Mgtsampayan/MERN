@@ -30,10 +30,23 @@ router.get('/', async (req, res) => {
 });
 
 // Update a payday entry by ID
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         const { id } = req.params;
         const { date, description } = req.body;
+        
+        // Find the payday entry by ID and check if the authenticated user owns it
+        const payday = await Payday.findById(id);
+        
+        if (!payday) {
+            return res.status(404).json({ error: 'Payday not found' });
+        }
+
+        // Check if the authenticated user owns this payday entry
+        if (payday.user.toString() !== req.user.id) {
+            return res.status(403).json({ error: 'Unauthorized: You do not own this payday entry' });
+        }
+
         const updatedPayday = await Payday.findByIdAndUpdate(id, { date, description }, { new: true });
         res.json(updatedPayday);
     } catch (err) {
@@ -42,9 +55,22 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete a payday entry by ID
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Find the payday entry by ID and check if the authenticated user owns it
+        const payday = await Payday.findById(id);
+        
+        if (!payday) {
+            return res.status(404).json({ error: 'Payday not found' });
+        }
+
+        // Check if the authenticated user owns this payday entry
+        if (payday.user.toString() !== req.user.id) {
+            return res.status(403).json({ error: 'Unauthorized: You do not own this payday entry' });
+        }
+
         await Payday.findByIdAndRemove(id);
         res.json({ message: 'Payday deleted successfully' });
     } catch (err) {

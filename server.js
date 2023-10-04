@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const paydayRoutes = require('./routes/api/paydayRoutes');
+const users =require('./routes/api/users');
 const connectDB = require('./config/db');
 const app = express();
 
@@ -15,6 +16,7 @@ connectDB();
 
 // Routes
 app.use('/paydays', paydayRoutes);
+app.use('/api/users', users);
 
 const PORT = process.env.PORT || 5000;
 
