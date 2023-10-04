@@ -1,5 +1,6 @@
 {
   "name": "mernstack",
+  "proxy": "http://localhost:5000",
   "version": "1.0.0",
   "description": "Technical Interview",
   "main": "server.js",
@@ -18,6 +19,7 @@
     "express-validator": "^7.0.1",
     "gravatar": "^1.8.2",
     "jsonwebtoken": "^9.0.1",
+    "moment-timezone": "^0.5.43",
     "mongoose": "^7.3.4",
     "request": "^2.88.2"
   },

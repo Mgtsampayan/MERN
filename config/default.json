@@ -1,5 +1,4 @@
 {
     "mongoURI": "mongodb+srv://gemuel20sampayan:u3C1dNZ1x09LqIpf@technical.hy6bhr0.mongodb.net/",
-
     "jwtSecret": "MySecretToken"
 }

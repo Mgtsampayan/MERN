@@ -1,19 +1,20 @@
 const express = require('express');
-const connectDB = require('./config/db')
-
+const bodyParser = require('body-parser');
+const paydayRoutes = require('./routes/api/paydayRoutes');
+const connectDB = require('./config/db');
 const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(bodyParser.json());
+
+app.get('/', (req, res) => res.send('API is Running Successfully'));
 
 // Connect to DB
 connectDB();
 
-// Init Middleware
-app.use(express.json({extended: false}));
-
-app.get('/', (req, res) =>res.send('API is Running Successfully'));
-
-// Define Routes
-app.use('/api/users', require('./routes/api/users'));
-app.use('/api/auth', require('./routes/api/auth'));
+// Routes
+app.use('/paydays', paydayRoutes);
 
 const PORT = process.env.PORT || 5000;
 
